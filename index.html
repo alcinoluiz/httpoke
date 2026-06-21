@@ -675,7 +675,7 @@
     <h1 class="hero-title">HTTPokÉMON</h1>
     <p class="hero-sub" data-i18n="hero.sub">HTTP Status Codes ilustrados com cenas do anime e games de Pokémon.</p>
     <div class="hero-usage">
-      <code>https://seu-site.com/<em>images</em>/404.jpg</code>
+      <code>https://alcinoluiz.github.io/httpoke/<em>images</em>/404.jpg</code>
     </div>
   </div>
 
@@ -1334,7 +1334,7 @@ function renderStatus(code) {
   }
 
   // Full URL for copying
-  const fullUrl = `${location.origin}/images/${code}.jpg`;
+  const fullUrl = `https://alcinoluiz.github.io/httpoke/images/${code}.jpg`;
 
   pageEl.innerHTML = `
     <div class="breadcrumb">
@@ -1396,7 +1396,7 @@ function copyUrl(url) {
 }
 
 function copyApiUrl() {
-  const url = `${location.origin}/images/[codigo].jpg`;
+  const url = `https://alcinoluiz.github.io/httpoke/images/[codigo].jpg`;
   navigator.clipboard.writeText(url).catch(() => {});
   showToast(t('toast.urlPatternCopied'));
 }
