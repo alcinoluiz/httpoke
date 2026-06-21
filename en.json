@@ -1,0 +1,220 @@
+{
+  "meta.description": "HTTPokémon — HTTP status codes illustrated with scenes from the Pokémon anime and games.",
+  "loader.loading": "Loading...",
+  "toast.urlCopied": "URL copied!",
+  "toast.urlPatternCopied": "URL pattern copied!",
+  "header.logoSub": "status codes · anime & games",
+  "header.copyApi": "📋 Copy API",
+  "hero.sub": "HTTP Status Codes illustrated with scenes from the Pokémon anime and games.",
+  "search.placeholder": "Search code or name... e.g. 404",
+  "filter.all": "All",
+  "filter.1xx": "1xx Info",
+  "filter.2xx": "2xx Success",
+  "filter.3xx": "3xx Redirect",
+  "filter.4xx": "4xx Client",
+  "filter.5xx": "5xx Server",
+  "card.imgNotFound": "Image\nnot found",
+  "status.breadcrumbHome": "HTTPokémon",
+  "status.breadcrumbStatus": "status",
+  "status.unknown": "Unknown status",
+  "status.unknownDesc": "This code is not in the HTTP Pokédex.",
+  "status.backHome": "⬅ Back to home",
+  "status.allStatuses": "⬅ All statuses",
+  "status.copyUrl": "📋 Copy URL",
+  "status.imageUrl": "Image URL:",
+  "status.imgMissingTitle": "⚠️ Image not found!",
+  "status.imgMissingBody": "Add the file <code>images/{code}.jpg</code> to the project root for it to appear here.",
+  "footer.developedBy": "Developed by <a href=\"https://github.com/alcinoluiz\" target=\"_blank\" rel=\"noopener noreferrer\">alce</a>",
+  "footer.inspiredBy": "Inspired by the classic format of <a href=\"https://http.cat\" target=\"_blank\" rel=\"noopener noreferrer\">HTTP Cats</a>",
+  "footer.disclaimerTitle": "Legal Notice / Disclaimer:",
+  "footer.disclaimer1": "<strong>Legal Notice / Disclaimer:</strong> This is a fan project, strictly personal, educational and non-commercial in nature. Images, names and concepts related to Pokémon are registered trademarks and intellectual property of <strong>Nintendo, Creatures Inc., Game Freak</strong> and <strong>The Pokémon Company</strong>.",
+  "footer.disclaimer2": "No copyright infringement is intended. All original content on this site is distributed free of charge and generates no direct or indirect revenue.",
+  "statuses": {
+    "100": {
+      "desc": "Professor Oak says: keep going! Part of the request was received — you may proceed."
+    },
+    "101": {
+      "desc": "Evolution in progress! The server is switching protocols as requested by the client."
+    },
+    "102": {
+      "desc": "Pokémon is being trained… The server received the request and is processing it, but no response yet."
+    },
+    "103": {
+      "desc": "Pre-loading activated! The server sends early hints to help the client prepare resources."
+    },
+    "200": {
+      "desc": "Pokémon caught! The request succeeded and the response is here."
+    },
+    "201": {
+      "desc": "New Pokémon registered in the Pokédex! Resource created successfully."
+    },
+    "202": {
+      "desc": "Mission accepted by the Bonfire Clan! The request was accepted but processing isn't done yet."
+    },
+    "203": {
+      "desc": "Third-party info — like Team Rocket's Codex. Data comes from an intermediary source."
+    },
+    "204": {
+      "desc": "Pokémon fled… without a trace. Success, but no response body."
+    },
+    "205": {
+      "desc": "Pikachu hit reset! The client should clear the current form or view."
+    },
+    "206": {
+      "desc": "Pokémon mid-battle! Only part of the resource was delivered (range request)."
+    },
+    "207": {
+      "desc": "Full team report! Multiple statuses in a single XML response."
+    },
+    "208": {
+      "desc": "Already reported to the Professor! This binding was already included in a previous response."
+    },
+    "226": {
+      "desc": "Pokédex delta applied! The server applied an IM transformation to the response."
+    },
+    "300": {
+      "desc": "Which starter will you choose? The resource has multiple representations available."
+    },
+    "301": {
+      "desc": "Gym Leader moved to another city — permanently! The resource has moved for good."
+    },
+    "302": {
+      "desc": "Pokémon spotted around here (temporarily)! Temporary redirect."
+    },
+    "303": {
+      "desc": "Look over there! The result is at another URI — use GET to fetch it."
+    },
+    "304": {
+      "desc": "Nothing changed since the last battle! Cache is still valid, no need to retransmit."
+    },
+    "307": {
+      "desc": "Temporary route on the Pokémon map! Temporary redirect preserving the HTTP method."
+    },
+    "308": {
+      "desc": "New official route on the map! Permanent redirect preserving the HTTP method."
+    },
+    "400": {
+      "desc": "Invalid command! The server couldn't understand the request due to malformed syntax."
+    },
+    "401": {
+      "desc": "You need a Badge to enter! Authentication required but not provided."
+    },
+    "402": {
+      "desc": "You need PokéCoins! Reserved for future use, but commonly used for paywalls."
+    },
+    "403": {
+      "desc": "Team Rocket restricted area! Authenticated but no permission to access."
+    },
+    "404": {
+      "desc": "Pokémon not found! The requested resource doesn't exist on this server."
+    },
+    "405": {
+      "desc": "That move isn't allowed here! The HTTP method used isn't supported for this resource."
+    },
+    "406": {
+      "desc": "Pokémon won't accept that Poké Ball! The server can't generate a response in the requested format."
+    },
+    "407": {
+      "desc": "Pokémon Center guard asks for ID! Proxy authentication required."
+    },
+    "408": {
+      "desc": "Time ran out to choose a move! The client took too long to send the request."
+    },
+    "409": {
+      "desc": "Two Pokémon, one Trainer — conflict! The current resource state conflicts with the request."
+    },
+    "410": {
+      "desc": "Pokémon was released back into the wild! The resource is gone permanently."
+    },
+    "411": {
+      "desc": "How large is your request? Content-Length is required for this request."
+    },
+    "412": {
+      "desc": "Battle precondition not met! A header condition evaluated to false."
+    },
+    "413": {
+      "desc": "Snorlax is too heavy! The request payload exceeds the server's limit."
+    },
+    "414": {
+      "desc": "Path to the Gym is too long! The provided URI is larger than the server accepts."
+    },
+    "415": {
+      "desc": "Server doesn't accept that Poké Ball format! The request media type is not supported."
+    },
+    "416": {
+      "desc": "Invalid XP range! The requested byte range is outside the file's bounds."
+    },
+    "417": {
+      "desc": "Battle expectation failed! The server couldn't satisfy the Expect header."
+    },
+    "418": {
+      "desc": "I'm a Magikarp, not a Gyarados! RFC 2324 — the server refuses to brew coffee because it's a teapot."
+    },
+    "421": {
+      "desc": "Pokémon sent to the wrong Gym! The request was directed to an inappropriate server."
+    },
+    "422": {
+      "desc": "Malformed Pokémon in the Poké Ball! The server understood the type but can't process the instructions."
+    },
+    "423": {
+      "desc": "Pokémon using Iron Defense! The resource is locked."
+    },
+    "424": {
+      "desc": "The battle chain broke! The request failed because a previous one did."
+    },
+    "425": {
+      "desc": "Too early to evolve! The server won't risk processing a request that might be replayed."
+    },
+    "426": {
+      "desc": "Needs to evolve! The client must switch to a different protocol."
+    },
+    "428": {
+      "desc": "Battle condition required! The server requires the request to be conditional."
+    },
+    "429": {
+      "desc": "Too many Poké Balls at once! The client sent too many requests in too short a time."
+    },
+    "431": {
+      "desc": "Ash's backpack is overflowing! The request headers are too large."
+    },
+    "444": {
+      "desc": "Pokémon vanished without responding! The server closed the connection without sending any response."
+    },
+    "451": {
+      "desc": "Banned by the Pokémon League! The resource is unavailable for legal reasons."
+    },
+    "499": {
+      "desc": "The Trainer abandoned the battle! The client closed the connection before the server responded."
+    },
+    "500": {
+      "desc": "The server got confused like a Psyduck with a headache! Unexpected internal error."
+    },
+    "501": {
+      "desc": "Move not yet learned! The server doesn't support the required functionality."
+    },
+    "502": {
+      "desc": "Mt. Moon gateway blocked! The server received an invalid response from an upstream server."
+    },
+    "503": {
+      "desc": "Pokémon Center closed for maintenance! The server is temporarily unavailable."
+    },
+    "504": {
+      "desc": "Timed out in the Rocket corridor! The upstream server took too long to respond."
+    },
+    "505": {
+      "desc": "Incompatible Pokédex version! The server doesn't support the HTTP version used in the request."
+    },
+    "507": {
+      "desc": "Bill's PC is full! There's not enough space to complete the operation."
+    },
+    "508": {
+      "desc": "Pokémon spinning in circles! The server detected an infinite loop while processing the request."
+    },
+    "511": {
+      "desc": "Authentication required on the Gym's network! Network authentication is required to gain access."
+    },
+    "599": {
+      "desc": "Network signal as weak as Magikarp! Timed out while trying to connect to the network."
+    }
+  }
+}

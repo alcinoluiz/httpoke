@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="pt-BR" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HTTPokémon — HTTP status codes ilustrados com cenas do anime e games de Pokémon." data-i18n-attr="content" data-i18n="meta.description" />
+  <meta name="theme-color" content="#CC0000" />
+  <title>HTTPokémon</title>
+
+  <!-- Pixel-style font para o tema Pokémon -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inconsolata:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ───────────────────────────────────────────── */
+    :root {
+      --red:     #CC0000;
+      --red-dk:  #8B0000;
+      --red-lt:  #FF4444;
+      --yellow:  #FFCC00;
+      --yellow-lt: #FFE566;
+      --blue:    #003A8C;
+      --blue-lt: #1A5CC8;
+      --white:   #FAFAF8;
+      --off:     #F0EDE6;
+      --ink:     #1A1A1A;
+      --muted:   #6B6460;
+      --border:  #D4CFC7;
+      --shadow:  rgba(0,0,0,0.15);
+
+      /* Categories */
+      --c1xx: #5B8ED6;  /* 1xx info   */
+      --c2xx: #3BAD6A;  /* 2xx success */
+      --c3xx: #E8A020;  /* 3xx redirect */
+      --c4xx: #D94F3D;  /* 4xx client  */
+      --c5xx: #8B4FD6;  /* 5xx server  */
+
+      --font-pixel: 'Press Start 2P', monospace;
+      --font-mono:  'Inconsolata', monospace;
+    }
+
+    /* ── RESET ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background: var(--off);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── POKÉBALL LOADER ──────────────────────────────────── */
+    #loader {
+      position: fixed; inset: 0;
+      background: var(--red);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #loader.hidden { opacity: 0; pointer-events: none; }
+
+    .pokeball-spin {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, #fff 50%, var(--red) 50%);
+      border: 5px solid #111;
+      position: relative;
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 0 0 3px #111 inset;
+    }
+    .pokeball-spin::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 5px solid #111;
+      z-index: 1;
+    }
+    .pokeball-spin::after {
+      content: '';
+      position: absolute;
+      top: calc(50% - 3px);
+      left: 0; right: 0;
+      height: 6px;
+      background: #111;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #loader p {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--yellow);
+      margin-top: 24px;
+      letter-spacing: 2px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── HEADER ───────────────────────────────────────────── */
+    header {
+      background: var(--red);
+      border-bottom: 6px solid var(--red-dk);
+      padding: 0;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .logo-ball {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, #fff 50%, var(--red-lt) 50%);
+      border: 4px solid #fff;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .logo-ball::before {
+      content: '';
+      position: absolute;
+      top: calc(50% - 2px);
+      left: 0; right: 0; height: 4px;
+      background: #fff;
+    }
+    .logo-ball::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #fff;
+      outline: 2px solid rgba(255,255,255,0.5);
+    }
+
+    .logo-text {
+      font-family: var(--font-pixel);
+      font-size: clamp(10px, 2.2vw, 16px);
+      color: var(--yellow);
+      line-height: 1.4;
+      text-shadow: 2px 2px 0 var(--red-dk);
+    }
+    .logo-text span { color: #fff; font-size: 0.65em; display: block; margin-top: 4px; }
+
+    nav {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+
+    .nav-badge {
+      font-family: var(--font-pixel);
+      font-size: 7px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+      border: none;
+      text-transform: uppercase;
+    }
+    .nav-badge:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+    .nav-badge.yellow { background: var(--yellow); color: var(--red-dk); }
+    .nav-badge.white  { background: #fff; color: var(--red-dk); }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    #view-home .hero {
+      background: linear-gradient(135deg, var(--red-dk) 0%, var(--red) 50%, var(--blue) 100%);
+      padding: 60px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle at 20% 50%, rgba(255,204,0,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(255,255,255,0.04) 0%, transparent 50%);
+    }
+
+    .hero-title {
+      font-family: var(--font-pixel);
+      font-size: clamp(18px, 4vw, 36px);
+      color: var(--yellow);
+      text-shadow: 3px 3px 0 var(--red-dk), 6px 6px 0 rgba(0,0,0,0.2);
+      line-height: 1.6;
+      position: relative;
+    }
+
+    .hero-sub {
+      font-family: var(--font-mono);
+      font-size: clamp(13px, 2vw, 16px);
+      color: rgba(255,255,255,0.85);
+      margin: 20px auto 28px;
+      max-width: 560px;
+      position: relative;
+    }
+
+    .hero-usage {
+      display: inline-block;
+      background: rgba(0,0,0,0.45);
+      border: 2px solid var(--yellow);
+      border-radius: 8px;
+      padding: 14px 24px;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      color: var(--yellow-lt);
+      position: relative;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-usage code em {
+      color: #fff;
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    /* ── CATEGORY FILTER ──────────────────────────────────── */
+    .filter-bar {
+      max-width: 1100px;
+      margin: 32px auto 0;
+      padding: 0 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-family: var(--font-pixel);
+      font-size: 7px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--white);
+      color: var(--muted);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      color: #fff;
+      border-color: transparent;
+      transform: translateY(-1px);
+    }
+    .filter-btn[data-cat="all"].active   { background: var(--ink); }
+    .filter-btn[data-cat="1xx"].active   { background: var(--c1xx); }
+    .filter-btn[data-cat="2xx"].active   { background: var(--c2xx); }
+    .filter-btn[data-cat="3xx"].active   { background: var(--c3xx); }
+    .filter-btn[data-cat="4xx"].active   { background: var(--c4xx); }
+    .filter-btn[data-cat="5xx"].active   { background: var(--c5xx); }
+
+    /* ── GRID ─────────────────────────────────────────────── */
+    .grid-wrap {
+      max-width: 960px;
+      margin: 28px auto 60px;
+      padding: 0 24px;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .status-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      text-decoration: none;
+      display: block;
+    }
+    .status-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 32px var(--shadow);
+    }
+    .status-card[data-cat="1xx"]:hover { border-color: var(--c1xx); }
+    .status-card[data-cat="2xx"]:hover { border-color: var(--c2xx); }
+    .status-card[data-cat="3xx"]:hover { border-color: var(--c3xx); }
+    .status-card[data-cat="4xx"]:hover { border-color: var(--c4xx); }
+    .status-card[data-cat="5xx"]:hover { border-color: var(--c5xx); }
+
+    .card-img-wrap {
+      width: 100%;
+      aspect-ratio: 3/2;
+      background: #e8e4dc;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .status-card:hover .card-img-wrap img {
+      transform: scale(1.05);
+    }
+
+    /* Placeholder quando imagem não existe */
+    .card-img-wrap .placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #e8e4dc, #d4d0c8);
+      gap: 8px;
+    }
+    .card-img-wrap .placeholder .ph-ball {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, #ccc 50%, #999 50%);
+      border: 3px solid #888;
+      opacity: 0.4;
+    }
+    .card-img-wrap .placeholder span {
+      font-family: var(--font-pixel);
+      font-size: 6px;
+      color: #999;
+      text-align: center;
+    }
+
+    .card-cat-stripe {
+      height: 4px;
+    }
+    [data-cat="1xx"] .card-cat-stripe { background: var(--c1xx); }
+    [data-cat="2xx"] .card-cat-stripe { background: var(--c2xx); }
+    [data-cat="3xx"] .card-cat-stripe { background: var(--c3xx); }
+    [data-cat="4xx"] .card-cat-stripe { background: var(--c4xx); }
+    [data-cat="5xx"] .card-cat-stripe { background: var(--c5xx); }
+
+    .card-info {
+      padding: 16px 18px 18px;
+    }
+    .card-code {
+      font-family: var(--font-pixel);
+      font-size: 16px;
+      color: var(--ink);
+      display: block;
+    }
+    .card-name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── STATUS VIEW ──────────────────────────────────────── */
+    #view-status { display: none; }
+    #view-status.active { display: block; }
+    #view-home.active { display: block; }
+    #view-home { display: none; }
+
+    .status-page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .breadcrumb {
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a {
+      color: var(--red);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { color: var(--border); }
+
+    .status-hero {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid var(--border);
+      box-shadow: 0 8px 32px var(--shadow);
+    }
+
+    .status-hero-cat {
+      height: 6px;
+    }
+
+    .status-hero-img {
+      width: 100%;
+      max-height: 520px;
+      object-fit: contain;
+      background: #f0ede6;
+      display: block;
+    }
+
+    .status-hero-body {
+      padding: 28px 32px 32px;
+    }
+
+    .status-hero-code {
+      font-family: var(--font-pixel);
+      font-size: clamp(28px, 6vw, 48px);
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .status-hero-name {
+      font-family: var(--font-pixel);
+      font-size: clamp(12px, 2.5vw, 18px);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    [data-page-cat="1xx"] .status-hero-name { color: var(--c1xx); }
+    [data-page-cat="2xx"] .status-hero-name { color: var(--c2xx); }
+    [data-page-cat="3xx"] .status-hero-name { color: var(--c3xx); }
+    [data-page-cat="4xx"] .status-hero-name { color: var(--c4xx); }
+    [data-page-cat="5xx"] .status-hero-name { color: var(--c5xx); }
+
+    .status-hero-desc {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 16px;
+      line-height: 1.7;
+      border-top: 2px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .status-usage-block {
+      margin-top: 20px;
+      background: var(--off);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--muted);
+      border: 2px solid var(--border);
+    }
+    .status-usage-block strong { color: var(--ink); }
+
+    .status-nav {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      padding: 12px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow); }
+    .btn-primary { background: var(--red); color: #fff; }
+    .btn-secondary { background: var(--white); color: var(--ink); border: 2px solid var(--border); }
+    .btn-yellow { background: var(--yellow); color: var(--red-dk); }
+
+    /* Not found within status page */
+    .not-found-banner {
+      background: #fff3cd;
+      border: 2px solid #e8b800;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      color: #7d5a00;
+      margin-top: 20px;
+      line-height: 1.8;
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 32px 24px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 2;
+    }
+    footer a { color: var(--yellow); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── IMAGE COPY TOAST ─────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--ink);
+      color: var(--yellow);
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      padding: 12px 22px;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── SEARCH ───────────────────────────────────────────── */
+    .search-wrap {
+      max-width: 1100px;
+      margin: 28px auto 0;
+      padding: 0 24px;
+    }
+    .search-box {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px 18px;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      border: 3px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box:focus { border-color: var(--red); }
+    .search-box::placeholder { color: var(--muted); }
+
+    /* ── LANG BUTTONS ────────────────────────────────────── */
+    .lang-btn.active-lang {
+      background: var(--yellow) !important;
+      color: var(--red-dk) !important;
+      font-weight: bold;
+      outline: 2px solid var(--red-dk);
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .status-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    }
+    @media (max-width: 540px) {
+      .status-grid { grid-template-columns: 1fr; }
+      .header-inner { padding: 12px 16px; }
+      .hero { padding: 40px 16px 32px; }
+      .status-hero-body { padding: 20px; }
+    }
+
+    /* ── Rodapé Principal ────────────────────────────────────────────── */
+  .site-footer {
+    background-color: #0a0a0a;
+    color: #aaaaaa;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 3px solid #3baf6a; /* Linha de sotaque verde (estilo 2xx) */
+    margin-top: 50px;
+  }
+
+  /* Links em Geral */
+  .site-footer a {
+    color: #e8b800;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .site-footer a:hover {
+    color: #2196f3; /* Azul ao passar o mouse */
+  }
+
+  /* Container de Redes Sociais */
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 25px;
+  }
+
+  .footer-social a {
+    color: #888888;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .footer-social a:hover {
+    color: #e8b800;
+    transform: translateY(-3px); /* Leve efeito de flutuar */
+  }
+
+  /* Seção de Créditos */
+  .footer-credits {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .footer-credits p {
+    margin: 5px 0;
+  }
+
+  /* Seção do Disclaimer (Texto menor e mais discreto) */
+  .footer-disclaimer {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #666666;
+    border-top: 1px solid #222222;
+    padding-top: 20px;
+  }
+
+  .footer-disclaimer strong {
+    color: #888888;
+  }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="pokeball-spin"></div>
+  <p data-i18n="loader.loading">Carregando...</p>
+</div>
+
+<!-- TOAST -->
+<div id="toast" data-i18n="toast.urlCopied">URL copiada!</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo" onclick="goHome()">
+      <div class="logo-ball"></div>
+      <div class="logo-text">
+        HTTPokÉMON
+        <span data-i18n="header.logoSub">status codes · anime &amp; games</span>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-badge yellow" onclick="copyApiUrl()" data-i18n="header.copyApi">📋 Copiar API</button>
+      <button class="nav-badge white lang-btn" onclick="setLang('pt-BR')" id="btn-pt" aria-label="Português">🇧🇷 PT</button>
+      <button class="nav-badge white lang-btn" onclick="setLang('en')"    id="btn-en" aria-label="English">🇺🇸 EN</button>
+  </nav>
+  </div>
+</header>
+
+<!-- HOME VIEW -->
+<div id="view-home">
+  <div class="hero">
+    <h1 class="hero-title">HTTPokÉMON</h1>
+    <p class="hero-sub" data-i18n="hero.sub">HTTP Status Codes ilustrados com cenas do anime e games de Pokémon.</p>
+    <div class="hero-usage">
+      <code>https://seu-site.com/<em>images</em>/404.jpg</code>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <input class="search-box" type="text" id="search" placeholder="Buscar código ou nome... ex: 404" data-i18n-attr="placeholder" data-i18n="search.placeholder" oninput="filterSearch()" />
+  </div>
+
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-btn active" data-cat="all"  onclick="setFilter('all')" data-i18n="filter.all">Todos</button>
+    <button class="filter-btn"        data-cat="1xx"  onclick="setFilter('1xx')" data-i18n="filter.1xx">1xx Info</button>
+    <button class="filter-btn"        data-cat="2xx"  onclick="setFilter('2xx')" data-i18n="filter.2xx">2xx Sucesso</button>
+    <button class="filter-btn"        data-cat="3xx"  onclick="setFilter('3xx')" data-i18n="filter.3xx">3xx Redirect</button>
+    <button class="filter-btn"        data-cat="4xx"  onclick="setFilter('4xx')" data-i18n="filter.4xx">4xx Client</button>
+    <button class="filter-btn"        data-cat="5xx"  onclick="setFilter('5xx')" data-i18n="filter.5xx">5xx Server</button>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="status-grid" id="status-grid"></div>
+  </div>
+</div>
+
+<!-- STATUS VIEW -->
+<div id="view-status">
+  <div class="status-page" id="status-page"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-social">
+    <a href="https://github.com/alcinoluiz" target="_blank" rel="noopener noreferrer" title="GitHub">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+
+    <a href="https://bsky.app/profile/alce404.bsky.social" target="_blank" rel="noopener noreferrer" title="Bluesky">
+      <svg viewBox="0 0 512 512" width="32" height="32" fill="currentColor"><path d="M111.8 62.2C170.2 105.9 226.6 182.4 256 226.9c29.4-44.5 85.8-121 144.2-164.7C454 22.4 512 16.5 512 70.7c0 10.3-1.6 20.3-4.7 29.8-12.8 39.2-59 146.6-83 192.8-31.7 61-68.6 74.5-115.3 68.2 86.3 14.9 110.3 63.2 56 122.6-64.5 70.5-101.5-11.4-109-28.7-7.5-17.3-7.5-17.3-15 0-7.5 17.3-44.5 99.2-109 28.7-54.3-59.4-30.3-107.7 56-122.6-46.7 6.3-83.6-7.2-115.3-68.2-24-46.2-70.2-153.6-83-192.8C1.6 91 0 81 0 70.7 0 16.5 58 22.4 111.8 62.2z"/></svg>
+    </a>
+
+    <a href="https://instagram.com/alce.404" target="_blank" rel="noopener noreferrer" title="Instagram">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+
+    <a href="https://tiktok.com/@alce.404" target="_blank" rel="noopener noreferrer" title="TikTok">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.73.9 1.69 1.63 2.77 2.06v4.01c-1.16-.11-2.31-.53-3.29-1.16-.84-.53-1.53-1.27-2.01-2.14v7.32c.04 1.56-.39 3.14-1.26 4.41-.93 1.35-2.35 2.33-3.95 2.72-1.74.45-3.63.24-5.23-.58-1.55-.78-2.77-2.16-3.41-3.8-.71-1.79-.67-3.83.11-5.59.7-1.6 1.99-2.93 3.61-3.67 1.46-.68 3.12-.87 4.67-.52v4.06c-.84-.29-1.77-.28-2.6.06-.69.27-1.29.77-1.67 1.42-.42.71-.52 1.58-.29 2.38.21.78.74 1.44 1.44 1.83.69.4 1.51.5 2.28.29.77-.21 1.43-.75 1.78-1.47.22-.47.31-.99.3-1.51V0h.01z"/></svg>
+    </a>
+
+    <a href="https://youtube.com/@alce404" target="_blank" rel="noopener noreferrer" title="YouTube">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M23.498 6.163a3.003 3.003 0 00-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507a3.003 3.003 0 00-2.11 2.11C0 8.033 0 12 0 12s0 3.967.503 5.837a3.003 3.003 0 002.11 2.11c1.871.507 9.386.507 9.386.507s7.517 0 9.387-.507a3.003 3.003 0 002.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
+
+    <a href="mailto:seu-email@dominio.com" title="Contato via E-mail">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    </a>
+  </div>
+
+  <div class="footer-credits">
+    <p data-i18n-html="footer.developedBy">Desenvolvido por <a href="https://github.com/alcinoluiz" target="_blank" rel="noopener noreferrer">alce</a></p>
+    <p data-i18n-html="footer.inspiredBy">Inspirado no formato clássico do <a href="https://http.cat" target="_blank" rel="noopener noreferrer">HTTP Cats</a></p>
+  </div>
+
+  <div class="footer-disclaimer">
+    <p data-i18n-html="footer.disclaimer1"><strong data-i18n="footer.disclaimerTitle">Aviso Legal / Disclaimer:</strong> Este é um projeto de fãs, de caráter estritamente pessoal, educacional e não comercial. As imagens, nomes e conceitos relacionados a Pokémon são marcas registradas e propriedades intelectuais da <strong>Nintendo, Creatures Inc., Game Freak</strong> e <strong>The Pokémon Company</strong>.</p>
+    <p data-i18n="footer.disclaimer2">Nenhuma infração de direitos autorais é pretendida. Todo o conteúdo original deste site é distribuído de forma gratuita e não gera qualquer tipo de receita direta ou indireta.</p>
+  </div>
+</footer>
+
+<script>
+
+/* ── I18N ENGINE ────────────────────────────────────────── */
+const TRANSLATIONS = {
+  "pt-BR": {
+    "meta.description": "HTTPokémon — HTTP status codes ilustrados com cenas do anime e games de Pokémon.",
+    "loader.loading": "Carregando...",
+    "toast.urlCopied": "URL copiada!",
+    "toast.urlPatternCopied": "Padrão de URL copiado!",
+    "header.logoSub": "status codes · anime & games",
+    "header.copyApi": "📋 Copiar API",
+    "hero.sub": "HTTP Status Codes ilustrados com cenas do anime e games de Pokémon.",
+    "search.placeholder": "Buscar código ou nome... ex: 404",
+    "filter.all": "Todos",
+    "filter.1xx": "1xx Info",
+    "filter.2xx": "2xx Sucesso",
+    "filter.3xx": "3xx Redirect",
+    "filter.4xx": "4xx Client",
+    "filter.5xx": "5xx Server",
+    "card.imgNotFound": "Imagem\nnão encontrada",
+    "status.breadcrumbHome": "HTTPokémon",
+    "status.breadcrumbStatus": "status",
+    "status.unknown": "Status desconhecido",
+    "status.unknownDesc": "Este código não consta na Pokédex HTTP.",
+    "status.backHome": "⬅ Voltar ao início",
+    "status.allStatuses": "⬅ Todos os status",
+    "status.copyUrl": "📋 Copiar URL",
+    "status.imageUrl": "URL da imagem:",
+    "status.imgMissingTitle": "⚠️ Imagem não encontrada!",
+    "status.imgMissingBody": "Adicione o arquivo <code>images/{code}.jpg</code> na raiz do projeto para que apareça aqui.",
+    "footer.developedBy": "Desenvolvido por <a href=\"https://github.com/alcinoluiz\" target=\"_blank\" rel=\"noopener noreferrer\">alce</a>",
+    "footer.inspiredBy": "Inspirado no formato clássico do <a href=\"https://http.cat\" target=\"_blank\" rel=\"noopener noreferrer\">HTTP Cats</a>",
+    "footer.disclaimerTitle": "Aviso Legal / Disclaimer:",
+    "footer.disclaimer1": "<strong>Aviso Legal / Disclaimer:</strong> Este é um projeto de fãs, de caráter estritamente pessoal, educacional e não comercial. As imagens, nomes e conceitos relacionados a Pokémon são marcas registradas e propriedades intelectuais da <strong>Nintendo, Creatures Inc., Game Freak</strong> e <strong>The Pokémon Company</strong>.",
+    "footer.disclaimer2": "Nenhuma infração de direitos autorais é pretendida. Todo o conteúdo original deste site é distribuído de forma gratuita e não gera qualquer tipo de receita direta ou indireta.",
+    "statuses": {
+      "100": { "desc": "O Professor Carvalho diz: continue em frente! Parte da requisição foi recebida, pode prosseguir." },
+      "101": { "desc": "Evolução em andamento! O servidor está trocando de protocolo conforme o pedido do cliente." },
+      "102": { "desc": "Pokémon está sendo treinado… O servidor recebeu e está processando a requisição, mas ainda sem resposta." },
+      "103": { "desc": "Pré-carregamento ativado! O servidor envia cabeçalhos antecipados para ajudar o cliente a preparar recursos." },
+      "200": { "desc": "Pokémon capturado! A requisição foi bem-sucedida e a resposta está aqui." },
+      "201": { "desc": "Novo Pokémon registrado na Pokédex! Recurso criado com sucesso." },
+      "202": { "desc": "Missão aceita pelo Clã da Fogueira! A requisição foi aceita mas o processamento ainda não terminou." },
+      "203": { "desc": "Informação de terceiros — como o Codex do Team Rocket. Os dados vêm de uma fonte intermediária." },
+      "204": { "desc": "Pokémon fugiu… sem deixar rastros. Sucesso, mas sem corpo na resposta." },
+      "205": { "desc": "Pikachu deu reset! O cliente deve limpar o formulário ou tela atual." },
+      "206": { "desc": "Pokémon na metade da batalha! Apenas parte do recurso foi entregue (range request)." },
+      "207": { "desc": "Relatório de toda a equipe! Múltiplos status em uma única resposta XML." },
+      "208": { "desc": "Já reportado ao Professor! Este binding já foi incluído numa resposta anterior." },
+      "226": { "desc": "Delta da Pokédex aplicado! O servidor aplicou uma transformação IM na resposta." },
+      "300": { "desc": "Qual inicial você escolhe? O recurso tem múltiplas representações disponíveis." },
+      "301": { "desc": "Gym Leader mudou de cidade — para sempre! O recurso foi movido permanentemente." },
+      "302": { "desc": "Pokémon avistado por aqui (temporariamente)! Redirecionamento temporário." },
+      "303": { "desc": "Olha ali! O resultado está em outro URI, use GET para buscá-lo." },
+      "304": { "desc": "Nada mudou desde a última batalha! Cache ainda válido, sem necessidade de retransmitir." },
+      "307": { "desc": "Rota temporária no mapa Pokémon! Redirecionamento temporário mantendo o método HTTP." },
+      "308": { "desc": "Nova rota oficial no mapa! Redirecionamento permanente mantendo o método HTTP." },
+      "400": { "desc": "Comando inválido! O servidor não conseguiu entender a requisição por sintaxe malformada." },
+      "401": { "desc": "Você precisa de Badge para entrar! Autenticação necessária mas não fornecida." },
+      "402": { "desc": "Precisa de PokéCoins! Reservado para uso futuro, mas comumente usado para paywalls." },
+      "403": { "desc": "Área restrita do Team Rocket! Autenticado mas sem permissão de acesso." },
+      "404": { "desc": "Pokémon não encontrado! O recurso solicitado não existe neste servidor." },
+      "405": { "desc": "Esse ataque não é permitido aqui! O método HTTP usado não é suportado para este recurso." },
+      "406": { "desc": "Pokémon não aceita essa Pokébola! O servidor não pode gerar uma resposta no formato solicitado." },
+      "407": { "desc": "Guarda do posto Pokémon pede identificação! Autenticação de proxy necessária." },
+      "408": { "desc": "Tempo esgotado para escolher o ataque! O cliente demorou demais para enviar a requisição." },
+      "409": { "desc": "Dois Pokémon, um Treinador — conflito! O estado atual do recurso conflita com a requisição." },
+      "410": { "desc": "Pokémon foi lançado de volta à natureza! O recurso sumiu permanentemente." },
+      "411": { "desc": "Qual o tamanho do seu pedido? O Content-Length é obrigatório para esta requisição." },
+      "412": { "desc": "Pré-condição da batalha não atendida! Uma condição do cabeçalho foi avaliada como falsa." },
+      "413": { "desc": "Snorlax é pesado demais! O payload da requisição excede o limite do servidor." },
+      "414": { "desc": "Caminho até o Ginásio longo demais! O URI fornecido é maior do que o servidor aceita." },
+      "415": { "desc": "Servidor não aceita esse formato de Pokébola! O tipo de mídia da requisição não é suportado." },
+      "416": { "desc": "Faixa de XP inválida! O range de bytes solicitado está fora dos limites do arquivo." },
+      "417": { "desc": "Expectativa de batalha frustrada! O servidor não conseguiu satisfazer o cabeçalho Expect." },
+      "418": { "desc": "Sou um Magikarp, não um Gyarados! RFC 2324 — o servidor recusa fazer café por ser um bule." },
+      "421": { "desc": "Pokémon enviado para o Ginásio errado! A requisição foi direcionada a um servidor inapropriado." },
+      "422": { "desc": "Pokémon mal-formado na Pokébola! O servidor entendeu o tipo mas não consegue processar as instruções." },
+      "423": { "desc": "Pokémon usando Defesa Total! O recurso está bloqueado." },
+      "424": { "desc": "A corrente de batalha quebrou! A requisição falhou porque uma outra falhou antes." },
+      "425": { "desc": "Cedo demais para evoluir! O servidor não quer arriscar processar uma requisição que pode ser repetida." },
+      "426": { "desc": "Precisa evoluir! O cliente precisa mudar para um protocolo diferente." },
+      "428": { "desc": "Condição de batalha obrigatória! O servidor exige que a requisição seja condicional." },
+      "429": { "desc": "Muitas Pokébolas de uma vez! O cliente enviou requisições demais em pouco tempo." },
+      "431": { "desc": "Mochila do Ash transbordando! Os cabeçalhos da requisição são muito grandes." },
+      "444": { "desc": "Pokémon sumiu sem responder! O servidor fechou a conexão sem enviar nenhuma resposta." },
+      "451": { "desc": "Proibido pela Liga Pokémon! O recurso está bloqueado por razões legais." },
+      "499": { "desc": "O Treinador abandonou a batalha! O cliente fechou a conexão antes do servidor responder." },
+      "500": { "desc": "O Servidor ficou confuso como um Psyduck com dor de cabeça! Erro interno inesperado no servidor." },
+      "501": { "desc": "Movimento ainda não aprendido! O servidor não suporta a funcionalidade necessária." },
+      "502": { "desc": "Gateway do Mt. Moon bloqueado! O servidor recebeu uma resposta inválida de um servidor upstream." },
+      "503": { "desc": "Centro Pokémon fechado para manutenção! O servidor está temporariamente indisponível." },
+      "504": { "desc": "Tempo esgotado no corredor do Rocket! O servidor upstream demorou demais para responder." },
+      "505": { "desc": "Versão da Pokédex incompatível! O servidor não suporta a versão HTTP usada na requisição." },
+      "507": { "desc": "PC do Bill está lotado! Não há espaço suficiente para completar a operação." },
+      "508": { "desc": "Pokémon girando em círculos! O servidor detectou um loop infinito ao processar a requisição." },
+      "511": { "desc": "Precisa de autenticação na rede do Ginásio! Requer autenticação para acessar a rede." },
+      "214": { "desc": "Pokédex processada por proxy! Um intermediário transformou o conteúdo da resposta." },
+      "305": { "desc": "Passe pelo guarda do Ginásio! O recurso só pode ser acessado através de um proxy." },
+      "419": { "desc": "Token da batalha expirou! A sessão ou página expirou por inatividade (Laravel)." },
+      "420": { "desc": "Respira fundo, Treinador! Você está fazendo requisições rápidas demais. Acalme-se (Twitter/X)." },
+      "450": { "desc": "Controle parental bloqueou o acesso! Conteúdo bloqueado pelo controle parental do Windows." },
+      "495": { "desc": "Certificado da Pokébola inválido! O cliente apresentou um certificado SSL inválido (Nginx)." },
+      "496": { "desc": "Pokébola especial obrigatória! O cliente não forneceu um certificado SSL quando exigido (Nginx)." },
+      "497": { "desc": "Porta errada no Centro Pokémon! Uma requisição HTTP foi enviada para uma porta HTTPS (Nginx)." },
+      "498": { "desc": "Credencial de batalha vencida! O token de autenticação expirou ou é inválido (Esri)." },
+      "506": { "desc": "Pokémon em loop de evolução! Erro de configuração interna de negociação de conteúdo." },
+      "509": { "desc": "Limite de dados da Pokédex atingido! O site excedeu sua largura de banda permitida (cPanel)." },
+      "510": { "desc": "Pokémon precisa de mais extensões! O servidor requer mais extensões da requisição." },
+      "521": { "desc": "Centro Pokémon fechado! O servidor de origem recusou a conexão do Cloudflare." },
+      "522": { "desc": "Conexão perdida na rota! O Cloudflare não conseguiu estabelecer conexão TCP com o servidor." },
+      "523": { "desc": "Servidor de origem inacessível! O Cloudflare não consegue alcançar o servidor de origem." },
+      "525": { "desc": "Aperto de mão SSL falhou! O Cloudflare não conseguiu negociar SSL com o servidor de origem." },
+      "530": { "desc": "Site congelado por inatividade! O site foi suspenso por inatividade ou falta de pagamento." },
+      "599": { "desc": "Sinal de rede tão fraco quanto Magikarp! Tempo esgotado ao tentar conectar à rede." }
+    }
+  },
+  "en": {
+    "meta.description": "HTTPokémon — HTTP status codes illustrated with scenes from the Pokémon anime and games.",
+    "loader.loading": "Loading...",
+    "toast.urlCopied": "URL copied!",
+    "toast.urlPatternCopied": "URL pattern copied!",
+    "header.logoSub": "status codes · anime & games",
+    "header.copyApi": "📋 Copy API",
+    "hero.sub": "HTTP Status Codes illustrated with scenes from the Pokémon anime and games.",
+    "search.placeholder": "Search code or name... e.g. 404",
+    "filter.all": "All",
+    "filter.1xx": "1xx Info",
+    "filter.2xx": "2xx Success",
+    "filter.3xx": "3xx Redirect",
+    "filter.4xx": "4xx Client",
+    "filter.5xx": "5xx Server",
+    "card.imgNotFound": "Image\nnot found",
+    "status.breadcrumbHome": "HTTPokémon",
+    "status.breadcrumbStatus": "status",
+    "status.unknown": "Unknown status",
+    "status.unknownDesc": "This code is not in the HTTP Pokédex.",
+    "status.backHome": "⬅ Back to home",
+    "status.allStatuses": "⬅ All statuses",
+    "status.copyUrl": "📋 Copy URL",
+    "status.imageUrl": "Image URL:",
+    "status.imgMissingTitle": "⚠️ Image not found!",
+    "status.imgMissingBody": "Add the file <code>images/{code}.jpg</code> to the project root for it to appear here.",
+    "footer.developedBy": "Developed by <a href=\"https://github.com/alcinoluiz\" target=\"_blank\" rel=\"noopener noreferrer\">alce</a>",
+    "footer.inspiredBy": "Inspired by the classic format of <a href=\"https://http.cat\" target=\"_blank\" rel=\"noopener noreferrer\">HTTP Cats</a>",
+    "footer.disclaimerTitle": "Legal Notice / Disclaimer:",
+    "footer.disclaimer1": "<strong>Legal Notice / Disclaimer:</strong> This is a fan project, strictly personal, educational and non-commercial in nature. Images, names and concepts related to Pokémon are registered trademarks and intellectual property of <strong>Nintendo, Creatures Inc., Game Freak</strong> and <strong>The Pokémon Company</strong>.",
+    "footer.disclaimer2": "No copyright infringement is intended. All original content on this site is distributed free of charge and generates no direct or indirect revenue.",
+    "statuses": {
+      "100": { "desc": "Professor Oak says: keep going! Part of the request was received — you may proceed." },
+      "101": { "desc": "Evolution in progress! The server is switching protocols as requested by the client." },
+      "102": { "desc": "Pokémon is being trained… The server received the request and is processing it, but no response yet." },
+      "103": { "desc": "Pre-loading activated! The server sends early hints to help the client prepare resources." },
+      "200": { "desc": "Pokémon caught! The request succeeded and the response is here." },
+      "201": { "desc": "New Pokémon registered in the Pokédex! Resource created successfully." },
+      "202": { "desc": "Mission accepted by the Bonfire Clan! The request was accepted but processing isn't done yet." },
+      "203": { "desc": "Third-party info — like Team Rocket's Codex. Data comes from an intermediary source." },
+      "204": { "desc": "Pokémon fled… without a trace. Success, but no response body." },
+      "205": { "desc": "Pikachu hit reset! The client should clear the current form or view." },
+      "206": { "desc": "Pokémon mid-battle! Only part of the resource was delivered (range request)." },
+      "207": { "desc": "Full team report! Multiple statuses in a single XML response." },
+      "208": { "desc": "Already reported to the Professor! This binding was already included in a previous response." },
+      "226": { "desc": "Pokédex delta applied! The server applied an IM transformation to the response." },
+      "300": { "desc": "Which starter will you choose? The resource has multiple representations available." },
+      "301": { "desc": "Gym Leader moved to another city — permanently! The resource has moved for good." },
+      "302": { "desc": "Pokémon spotted around here (temporarily)! Temporary redirect." },
+      "303": { "desc": "Look over there! The result is at another URI — use GET to fetch it." },
+      "304": { "desc": "Nothing changed since the last battle! Cache is still valid, no need to retransmit." },
+      "307": { "desc": "Temporary route on the Pokémon map! Temporary redirect preserving the HTTP method." },
+      "308": { "desc": "New official route on the map! Permanent redirect preserving the HTTP method." },
+      "400": { "desc": "Invalid command! The server couldn't understand the request due to malformed syntax." },
+      "401": { "desc": "You need a Badge to enter! Authentication required but not provided." },
+      "402": { "desc": "You need PokéCoins! Reserved for future use, but commonly used for paywalls." },
+      "403": { "desc": "Team Rocket restricted area! Authenticated but no permission to access." },
+      "404": { "desc": "Pokémon not found! The requested resource doesn't exist on this server." },
+      "405": { "desc": "That move isn't allowed here! The HTTP method used isn't supported for this resource." },
+      "406": { "desc": "Pokémon won't accept that Poké Ball! The server can't generate a response in the requested format." },
+      "407": { "desc": "Pokémon Center guard asks for ID! Proxy authentication required." },
+      "408": { "desc": "Time ran out to choose a move! The client took too long to send the request." },
+      "409": { "desc": "Two Pokémon, one Trainer — conflict! The current resource state conflicts with the request." },
+      "410": { "desc": "Pokémon was released back into the wild! The resource is gone permanently." },
+      "411": { "desc": "How large is your request? Content-Length is required for this request." },
+      "412": { "desc": "Battle precondition not met! A header condition evaluated to false." },
+      "413": { "desc": "Snorlax is too heavy! The request payload exceeds the server's limit." },
+      "414": { "desc": "Path to the Gym is too long! The provided URI is larger than the server accepts." },
+      "415": { "desc": "Server doesn't accept that Poké Ball format! The request media type is not supported." },
+      "416": { "desc": "Invalid XP range! The requested byte range is outside the file's bounds." },
+      "417": { "desc": "Battle expectation failed! The server couldn't satisfy the Expect header." },
+      "418": { "desc": "I'm a Magikarp, not a Gyarados! RFC 2324 — the server refuses to brew coffee because it's a teapot." },
+      "421": { "desc": "Pokémon sent to the wrong Gym! The request was directed to an inappropriate server." },
+      "422": { "desc": "Malformed Pokémon in the Poké Ball! The server understood the type but can't process the instructions." },
+      "423": { "desc": "Pokémon using Iron Defense! The resource is locked." },
+      "424": { "desc": "The battle chain broke! The request failed because a previous one did." },
+      "425": { "desc": "Too early to evolve! The server won't risk processing a request that might be replayed." },
+      "426": { "desc": "Needs to evolve! The client must switch to a different protocol." },
+      "428": { "desc": "Battle condition required! The server requires the request to be conditional." },
+      "429": { "desc": "Too many Poké Balls at once! The client sent too many requests in too short a time." },
+      "431": { "desc": "Ash's backpack is overflowing! The request headers are too large." },
+      "444": { "desc": "Pokémon vanished without responding! The server closed the connection without sending any response." },
+      "451": { "desc": "Banned by the Pokémon League! The resource is unavailable for legal reasons." },
+      "499": { "desc": "The Trainer abandoned the battle! The client closed the connection before the server responded." },
+      "500": { "desc": "The server got confused like a Psyduck with a headache! Unexpected internal error." },
+      "501": { "desc": "Move not yet learned! The server doesn't support the required functionality." },
+      "502": { "desc": "Mt. Moon gateway blocked! The server received an invalid response from an upstream server." },
+      "503": { "desc": "Pokémon Center closed for maintenance! The server is temporarily unavailable." },
+      "504": { "desc": "Timed out in the Rocket corridor! The upstream server took too long to respond." },
+      "505": { "desc": "Incompatible Pokédex version! The server doesn't support the HTTP version used in the request." },
+      "507": { "desc": "Bill's PC is full! There's not enough space to complete the operation." },
+      "508": { "desc": "Pokémon spinning in circles! The server detected an infinite loop while processing the request." },
+      "511": { "desc": "Authentication required on the Gym's network! Network authentication is required to gain access." },
+      "214": { "desc": "Pokédex processed by a proxy! An intermediate proxy transformed the response content." },
+      "305": { "desc": "Pass through the Gym guard! The requested resource can only be accessed through a proxy." },
+      "419": { "desc": "Battle token expired! The session or page expired, usually due to inactivity (Laravel)." },
+      "420": { "desc": "Take a breath, Trainer! You are making requests too fast. Enhance your calm (Twitter/X)." },
+      "450": { "desc": "Parental controls blocked access! The content was blocked by Windows Parental Controls." },
+      "495": { "desc": "Invalid Poké Ball certificate! The client presented an invalid SSL certificate (Nginx)." },
+      "496": { "desc": "Special Poké Ball required! The client did not provide an SSL certificate when required (Nginx)." },
+      "497": { "desc": "Wrong port at the Pokémon Center! An HTTP request was sent to an HTTPS port (Nginx)." },
+      "498": { "desc": "Battle credential expired! The authentication token has expired or is invalid (Esri)." },
+      "506": { "desc": "Pokémon stuck in an evolution loop! Internal content negotiation configuration error." },
+      "509": { "desc": "Pokédex data limit reached! The site exceeded its allowed bandwidth (cPanel)." },
+      "510": { "desc": "Pokémon needs more extensions! The server requires further extensions to fulfil the request." },
+      "521": { "desc": "Pokémon Center is down! The origin server refused the connection from Cloudflare." },
+      "522": { "desc": "Connection lost on the route! Cloudflare could not establish a TCP connection to the server." },
+      "523": { "desc": "Origin server unreachable! Cloudflare cannot reach the origin server." },
+      "525": { "desc": "SSL handshake failed! Cloudflare could not negotiate SSL with the origin server." },
+      "530": { "desc": "Site frozen due to inactivity! The site was suspended due to inactivity or non-payment." },
+      "599": { "desc": "Network signal as weak as Magikarp! Timed out while trying to connect to the network." }
+    }
+  }
+};
+
+function detectLang() {
+  // 1. Preferência salva pelo usuário — maior prioridade
+  const saved = localStorage.getItem('httppokemon-lang');
+  if (saved) return saved;
+
+  // 2. Idiomas declarados pelo browser/OS (lista ordenada por preferência,
+  //    ex: ["pt-BR", "pt", "en-US", "en"])
+  const preferred = navigator.languages?.length
+    ? navigator.languages
+    : [navigator.language || navigator.userLanguage || 'en'];
+
+  for (const lang of preferred) {
+    if (lang.startsWith('pt')) return 'pt-BR'; // pt, pt-BR, pt-PT → português
+    if (lang.startsWith('en')) return 'en';    // en, en-US, en-GB → inglês
+  }
+
+  // 3. Fallback final
+  return 'en';
+}
+
+let currentLang = detectLang();
+
+function t(key) {
+  const dict = TRANSLATIONS[currentLang] || TRANSLATIONS['pt-BR'];
+  return dict[key] || TRANSLATIONS['pt-BR'][key] || key;
+}
+
+function tStatus(code) {
+  const dict = TRANSLATIONS[currentLang] || TRANSLATIONS['pt-BR'];
+  return dict.statuses?.[String(code)] || TRANSLATIONS['pt-BR'].statuses?.[String(code)] || {};
+}
+
+function applyI18n() {
+  // Textos estáticos com data-i18n (não toca em nada gerado dinamicamente)
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key  = el.getAttribute('data-i18n');
+    const attr = el.getAttribute('data-i18n-attr');
+    if (attr) {
+      el.setAttribute(attr, t(key));
+    } else {
+      el.textContent = t(key);
+    }
+  });
+
+  // innerHTML (links dentro do texto — footer, etc.)
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    el.innerHTML = t(el.getAttribute('data-i18n-html'));
+  });
+
+  // Meta description
+  const metaDesc = document.querySelector('meta[data-i18n="meta.description"]');
+  if (metaDesc) metaDesc.setAttribute('content', t('meta.description'));
+
+  // lang do html
+  document.getElementById('html-root').lang = currentLang;
+
+  // Botões de idioma ativos
+  document.getElementById('btn-pt')?.classList.toggle('active-lang', currentLang === 'pt-BR');
+  document.getElementById('btn-en')?.classList.toggle('active-lang', currentLang === 'en');
+
+  // Re-renderizar apenas a view ativa, sem recriar o HTML da página de status
+  const statusActive = document.getElementById('view-status').classList.contains('active');
+  if (statusActive) {
+    updateStatusTexts(); // só troca os textos, não recria o DOM
+  } else {
+    renderGrid();        // home: recriar cards é seguro (sem imagens com onerror pendente)
+  }
+}
+
+// Atualiza só os textos da página de status aberta, sem recriar o HTML
+// (evita recarregar a imagem e re-disparar onerror)
+function updateStatusTexts() {
+  const page = document.getElementById('status-page');
+  if (!page) return;
+
+  const code = parseInt(page.getAttribute('data-status-code'));
+  if (!code) return;
+  const s = STATUSES.find(x => x.code === code);
+  if (!s) return;
+
+  // Breadcrumb
+  const bc = page.querySelectorAll('.breadcrumb a, .breadcrumb span');
+  if (bc[0]) bc[0].textContent = t('status.breadcrumbHome');
+  if (bc[2]) bc[2].textContent = t('status.breadcrumbStatus');
+
+  // Descrição temática
+  const descEl = page.querySelector('.status-hero-desc');
+  if (descEl) descEl.textContent = tStatus(code).desc || s.desc;
+
+  // Label "URL da imagem:"
+  const usageStrong = page.querySelector('.status-usage-block strong');
+  if (usageStrong) usageStrong.textContent = t('status.imageUrl');
+
+  // Botões
+  page.querySelectorAll('.btn').forEach(btn => {
+    const action = btn.getAttribute('onclick') || '';
+    if (action.includes('goHome'))   btn.textContent = t('status.allStatuses');
+    if (action.includes('copyUrl'))  btn.textContent = t('status.copyUrl');
+  });
+
+  // Banner de imagem ausente (se visível)
+  const banner = page.querySelector('.not-found-banner');
+  if (banner) {
+    banner.innerHTML = t('status.imgMissingTitle') + '<br/>'
+      + t('status.imgMissingBody').replace('{code}', code);
+  }
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('httppokemon-lang', lang);
+  applyI18n();
+}
+
+/* ─────────────────────────────────────────────────────────STATU
+   DATA — HTTP Status Codes + descrição temática Pokémon
+───────────────────────────────────────────────────────── */
+const STATUSES = [
+  // 1xx
+  { code: 100, name: 'Continue',                     desc: 'O servidor recebeu os cabeçalhos da requisição e o cliente pode continuar enviando o corpo.' },
+  { code: 101, name: 'Switching Protocols',           desc: 'O servidor aceita a troca de protocolo solicitada pelo cliente.' },
+  { code: 102, name: 'Processing',                   desc: 'O servidor recebeu a requisição e está processando, mas ainda não há resposta disponível.' },
+  { code: 103, name: 'Early Hints',                  desc: 'O servidor envia cabeçalhos preliminares antes da resposta final para otimizar o carregamento.' },
+ 
+  // 2xx
+  { code: 200, name: 'OK',                           desc: 'A requisição foi bem-sucedida. A resposta contém o recurso ou resultado solicitado.' },
+  { code: 201, name: 'Created',                      desc: 'A requisição foi bem-sucedida e um novo recurso foi criado como resultado.' },
+  { code: 202, name: 'Accepted',                     desc: 'A requisição foi aceita para processamento, mas o processamento ainda não foi concluído.' },
+  { code: 203, name: 'Non-Authoritative Information',desc: 'A resposta retornada é de uma cópia em cache ou de um proxy, não do servidor original.' },
+  { code: 204, name: 'No Content',                   desc: 'A requisição foi bem-sucedida, mas não há conteúdo a retornar no corpo da resposta.' },
+  { code: 205, name: 'Reset Content',                desc: 'A requisição foi bem-sucedida. O cliente deve reinicializar a visualização do documento.' },
+  { code: 206, name: 'Partial Content',              desc: 'O servidor está entregando apenas parte do recurso devido a um cabeçalho Range enviado pelo cliente.' },
+  { code: 207, name: 'Multi-Status',                 desc: 'O corpo da resposta é um XML que pode conter múltiplos códigos de status para diferentes operações.' },
+  { code: 208, name: 'Already Reported',             desc: 'Os membros de um DAV binding já foram enumerados em uma resposta anterior e não serão incluídos novamente.' },
+  { code: 214, name: 'Transformation Applied',          desc: 'Um proxy aplicou uma transformação ao conteúdo, como compressão ou tradução de formato.' },
+  { code: 226, name: 'IM Used',                      desc: 'O servidor atendeu a requisição e a resposta é uma representação do resultado de manipulações de instância.' },
+ 
+  // 3xx
+  { code: 300, name: 'Multiple Choices',             desc: 'A requisição possui múltiplas respostas possíveis. O cliente deve escolher uma delas.' },
+  { code: 301, name: 'Moved Permanently',            desc: 'O recurso solicitado foi movido permanentemente para uma nova URL.' },
+  { code: 302, name: 'Found',                        desc: 'O recurso solicitado foi encontrado temporariamente em uma URL diferente.' },
+  { code: 303, name: 'See Other',                    desc: 'O servidor redireciona o cliente para outro recurso usando o método GET.' },
+  { code: 304, name: 'Not Modified',                 desc: 'O recurso não foi modificado desde a última requisição. O cache do cliente ainda é válido.' },
+  { code: 305, name: 'Use Proxy',                        desc: 'O recurso solicitado só pode ser acessado por meio de um proxy especificado.' },
+  { code: 307, name: 'Temporary Redirect',           desc: 'O recurso foi redirecionado temporariamente, mantendo o método HTTP original.' },
+  { code: 308, name: 'Permanent Redirect',           desc: 'O recurso foi redirecionado permanentemente, mantendo o método HTTP original.' },
+ 
+  // 4xx
+  { code: 400, name: 'Bad Request',                  desc: 'O servidor não conseguiu entender a requisição devido a sintaxe inválida ou malformada.' },
+  { code: 401, name: 'Unauthorized',                 desc: 'A requisição requer autenticação. O cliente deve se autenticar para obter acesso.' },
+  { code: 402, name: 'Payment Required',             desc: 'Reservado para uso futuro. Indica que é necessário pagamento para acessar o recurso.' },
+  { code: 403, name: 'Forbidden',                    desc: 'O servidor entendeu a requisição, mas se recusa a autorizá-la.' },
+  { code: 404, name: 'Not Found',                    desc: 'O servidor não encontrou o recurso solicitado. A URL pode estar incorreta ou o recurso removido.' },
+  { code: 405, name: 'Method Not Allowed',           desc: 'O método HTTP utilizado não é suportado para o recurso solicitado.' },
+  { code: 406, name: 'Not Acceptable',               desc: 'O servidor não pode gerar uma resposta que corresponda aos critérios de aceitação do cliente.' },
+  { code: 407, name: 'Proxy Authentication Required',desc: 'O cliente deve se autenticar no proxy antes de ter acesso ao recurso solicitado.' },
+  { code: 408, name: 'Request Timeout',              desc: 'O servidor encerrou a conexão por inatividade. O cliente demorou demais para enviar a requisição.' },
+  { code: 409, name: 'Conflict',                     desc: 'A requisição conflita com o estado atual do recurso no servidor.' },
+  { code: 410, name: 'Gone',                         desc: 'O recurso solicitado foi removido permanentemente e não estará mais disponível.' },
+  { code: 411, name: 'Length Required',              desc: 'O servidor rejeita a requisição porque o campo Content-Length é obrigatório e não foi enviado.' },
+  { code: 412, name: 'Precondition Failed',          desc: 'O servidor não atende a uma ou mais condições definidas nos cabeçalhos da requisição.' },
+  { code: 413, name: 'Payload Too Large',            desc: 'O corpo da requisição é maior do que o servidor está disposto ou é capaz de processar.' },
+  { code: 414, name: 'URI Too Long',                 desc: 'A URL da requisição é mais longa do que o servidor está disposto a interpretar.' },
+  { code: 415, name: 'Unsupported Media Type',       desc: 'O formato de mídia do corpo da requisição não é suportado pelo servidor.' },
+  { code: 416, name: 'Range Not Satisfiable',        desc: 'O intervalo especificado pelo cliente no cabeçalho Range não pode ser satisfeito pelo servidor.' },
+  { code: 417, name: 'Expectation Failed',           desc: 'O servidor não pode atender à expectativa indicada no cabeçalho Expect da requisição.' },
+  { code: 418, name: "I'm a Teapot",                desc: 'O servidor se recusa a fazer café porque é um bule. Definido pela RFC 2324 como piada.' },
+  { code: 419, name: 'Page Expired',                     desc: 'A sessão ou token CSRF da página expirou. Comum em frameworks como Laravel.' },
+  { code: 420, name: 'Enhance Your Calm',                desc: 'O cliente está enviando requisições em excesso. Usado pelo Twitter/X para indicar rate limit.' },
+  { code: 421, name: 'Misdirected Request',          desc: 'A requisição foi direcionada a um servidor que não pode produzir uma resposta adequada.' },
+  { code: 422, name: 'Unprocessable Entity',         desc: 'O servidor entende o tipo de conteúdo, mas não consegue processar as instruções enviadas.' },
+  { code: 423, name: 'Locked',                       desc: 'O recurso está bloqueado e não pode ser acessado no momento.' },
+  { code: 424, name: 'Failed Dependency',            desc: 'A requisição falhou porque uma requisição anterior da qual ela dependia também falhou.' },
+  { code: 425, name: 'Too Early',                    desc: 'O servidor não está disposto a processar uma requisição que pode ser repetida (replay).' },
+  { code: 426, name: 'Upgrade Required',             desc: 'O servidor exige que o cliente atualize para um protocolo diferente antes de continuar.' },
+  { code: 428, name: 'Precondition Required',        desc: 'O servidor exige que a requisição seja condicional para evitar conflitos de atualização.' },
+  { code: 429, name: 'Too Many Requests',            desc: 'O cliente enviou requisições em excesso em um determinado período de tempo.' },
+  { code: 431, name: 'Request Header Fields Too Large', desc: 'O servidor rejeita a requisição porque os cabeçalhos HTTP são muito grandes.' },
+  { code: 444, name: 'No Response',                  desc: 'O servidor fechou a conexão sem enviar nenhuma resposta. Usado pelo Nginx.' },
+  { code: 450, name: 'Blocked by Windows Parental Controls', desc: 'O acesso ao recurso foi bloqueado pelo Controle dos Pais do Windows.' },
+  { code: 451, name: 'Unavailable For Legal Reasons',desc: 'O recurso está indisponível por razões legais, como censura ou ordem judicial.' },
+  { code: 495, name: 'SSL Certificate Error',            desc: 'O cliente apresentou um certificado SSL inválido ao servidor. Usado pelo Nginx.' },
+  { code: 496, name: 'SSL Certificate Required',         desc: 'O cliente não forneceu um certificado SSL quando o servidor exigia um. Usado pelo Nginx.' },
+  { code: 497, name: 'HTTP Request Sent to HTTPS Port', desc: 'Uma requisição HTTP foi enviada a uma porta configurada para HTTPS. Usado pelo Nginx.' },
+  { code: 498, name: 'Token expired/invalid',            desc: 'O token de autenticação fornecido expirou ou é inválido. Usado pela Esri.' },
+  { code: 499, name: 'Client Closed Request',        desc: 'O cliente encerrou a conexão antes de o servidor enviar uma resposta.' },
+ 
+  // 5xx
+  { code: 500, name: 'Internal Server Error',        desc: 'O servidor encontrou uma situação inesperada que o impediu de atender à requisição.' },
+  { code: 501, name: 'Not Implemented',              desc: 'O servidor não suporta a funcionalidade necessária para atender à requisição.' },
+  { code: 502, name: 'Bad Gateway',                  desc: 'O servidor, atuando como gateway, recebeu uma resposta inválida do servidor upstream.' },
+  { code: 503, name: 'Service Unavailable',          desc: 'O servidor está temporariamente indisponível, geralmente por manutenção ou sobrecarga.' },
+  { code: 504, name: 'Gateway Timeout',              desc: 'O servidor, atuando como gateway, não recebeu resposta a tempo do servidor upstream.' },
+  { code: 505, name: 'HTTP Version Not Supported',   desc: 'O servidor não suporta a versão do protocolo HTTP usada na requisição.' },
+  { code: 506, name: 'Variant Also Negotiates',          desc: 'O servidor tem um erro de configuração interna na negociação de conteúdo transparente.' },
+  { code: 507, name: 'Insufficient Storage',         desc: 'O servidor não consegue armazenar a representação necessária para completar a requisição.' },
+  { code: 508, name: 'Loop Detected',                desc: 'O servidor detectou um loop infinito ao processar a requisição.' },
+  { code: 509, name: 'Bandwidth Limit Exceeded',        desc: 'O servidor excedeu o limite de largura de banda permitido. Usado pelo cPanel.' },
+  { code: 510, name: 'Not Extended',                     desc: 'O servidor requer extensões adicionais que o cliente não enviou na requisição.' },
+  { code: 511, name: 'Network Authentication Required', desc: 'O cliente precisa se autenticar para obter acesso à rede antes de continuar.' },
+  { code: 521, name: 'Web Server Is Down',               desc: 'O servidor de origem recusou a conexão do Cloudflare.' },
+  { code: 522, name: 'Connection Timed Out',             desc: 'O Cloudflare não conseguiu estabelecer uma conexão TCP com o servidor de origem.' },
+  { code: 523, name: 'Origin Is Unreachable',            desc: 'O Cloudflare não consegue alcançar o servidor de origem.' },
+  { code: 525, name: 'SSL Handshake Failed',             desc: 'O Cloudflare não conseguiu concluir o handshake SSL com o servidor de origem.' },
+  { code: 530, name: 'Site Frozen',                      desc: 'O site foi suspenso por inatividade ou falta de pagamento.' },
+  { code: 599, name: 'Network Connect Timeout Error',desc: 'A tentativa de conexão com o servidor expirou antes de ser estabelecida.' },
+];
+
+
+function getCat(code) {
+  if (code < 200) return '1xx';
+  if (code < 300) return '2xx';
+  if (code < 400) return '3xx';
+  if (code < 500) return '4xx';
+  return '5xx';
+}
+
+/* ── IMAGE PATH ─────────────────────────────────────────── */
+// Coloque suas imagens em ./images/404.jpg, ./images/200.jpg, etc.
+// Ou altere IMAGE_BASE para apontar para outro diretório.
+const IMAGE_BASE = './thumbs/';
+const IMAGE_BASE_CARD = './images/';
+const IMAGE_EXT  = '.jpg'; // mude para .png se preferir
+
+function imgPath(code) {
+  return `${IMAGE_BASE}${code}${IMAGE_EXT}`;
+}
+
+function imgCardPath(code) {
+  return `${IMAGE_BASE_CARD}${code}${IMAGE_EXT}`;
+}
+
+/* ── ROUTING ────────────────────────────────────────────── */
+let currentFilter = 'all';
+
+function goHome() {
+  // Limpa o banner de erro para não persistir na próxima abertura
+  const banner = document.getElementById('img-missing-banner');
+  if (banner) banner.innerHTML = '';
+  document.getElementById('view-home').classList.add('active');
+  document.getElementById('view-status').classList.remove('active');
+  location.hash = '';
+  renderGrid();
+}
+
+function goStatus(code) {
+  document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-status').classList.add('active');
+  renderStatus(code);
+  location.hash = `status/${code}`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function routeFromURL() {
+  const hash = location.hash.replace(/^#\/?/, ''); // remove '#' e '/' inicial
+  const m = hash.match(/^status\/(\d+)$/);
+  if (m) {
+    goStatus(parseInt(m[1]));
+  } else {
+    goHome();
+  }
+}
+
+window.addEventListener('hashchange', routeFromURL);
+
+/* ── FILTER / SEARCH ────────────────────────────────────── */
+function setFilter(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-cat="${cat}"]`).classList.add('active');
+  renderGrid();
+}
+
+function filterSearch() {
+  renderGrid();
+}
+
+function getFiltered() {
+  const q = (document.getElementById('search')?.value || '').toLowerCase();
+  return STATUSES.filter(s => {
+    const catOk = currentFilter === 'all' || getCat(s.code) === currentFilter;
+    const qOk   = !q || String(s.code).includes(q) || s.name.toLowerCase().includes(q);
+    return catOk && qOk;
+  });
+}
+
+/* ── RENDER GRID ────────────────────────────────────────── */
+function renderGrid() {
+  const grid = document.getElementById('status-grid');
+  const list = getFiltered();
+
+  grid.innerHTML = list.map(s => {
+    const cat = getCat(s.code);
+    const src = imgPath(s.code);
+    return `
+      <a class="status-card" data-cat="${cat}" onclick="goStatus(${s.code}); return false;" href="/status/${s.code}">
+        <div class="card-img-wrap">
+          <img
+            src="${src}"
+            alt="HTTP ${s.code} — ${s.name}"
+            loading="lazy"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="placeholder" style="display:none">
+            <div class="ph-ball"></div>
+            <span data-i18n="card.imgNotFound">Imagem<br/>não encontrada</span>
+          </div>
+        </div>
+        <div class="card-cat-stripe"></div>
+        <div class="card-info">
+          <span class="card-code">${s.code}</span>
+          <div class="card-name">${s.name}</div>
+        </div>
+      </a>
+    `;
+  }).join('');
+}
+
+/* ── RENDER STATUS PAGE ─────────────────────────────────── */
+function renderStatus(code) {
+  const s   = STATUSES.find(x => x.code === code);
+  const cat = s ? getCat(s.code) : '4xx';
+  const src = imgCardPath(code);
+
+  const catColors = { '1xx': '#5B8ED6', '2xx': '#3BAD6A', '3xx': '#E8A020', '4xx': '#D94F3D', '5xx': '#8B4FD6' };
+  const catColor  = catColors[cat] || '#888';
+
+  // Prev / Next navigation
+  const idx  = STATUSES.findIndex(x => x.code === code);
+  const prev = idx > 0                   ? STATUSES[idx - 1] : null;
+  const next = idx < STATUSES.length - 1 ? STATUSES[idx + 1] : null;
+
+  const pageEl = document.getElementById('status-page');
+  pageEl.setAttribute('data-page-cat', cat);
+  pageEl.setAttribute('data-status-code', code);
+
+  if (!s) {
+    pageEl.innerHTML = `
+      <div class="breadcrumb">
+        <a onclick="goHome()">${t('status.breadcrumbHome')}</a>
+        <span>›</span>
+        <span>${t('status.breadcrumbStatus')}</span>
+        <span>›</span>
+        <span>${code}</span>
+      </div>
+      <div class="status-hero">
+        <div style="height:6px;background:${catColor}"></div>
+        <div style="padding:40px;text-align:center">
+          <div style="font-family:var(--font-pixel);font-size:48px;color:var(--ink)">${code}</div>
+          <div style="font-family:var(--font-pixel);font-size:14px;color:${catColor};margin-top:12px">${t('status.unknown')}</div>
+          <p style="font-family:var(--font-mono);color:var(--muted);margin-top:16px">${t('status.unknownDesc')}</p>
+        </div>
+      </div>
+      <div class="status-nav">
+        <button class="btn btn-primary" onclick="goHome()">${t('status.backHome')}</button>
+      </div>
+    `;
+    return;
+  }
+
+  // Full URL for copying
+  const fullUrl = `${location.origin}/images/${code}.jpg`;
+
+  pageEl.innerHTML = `
+    <div class="breadcrumb">
+      <a onclick="goHome()">${t('status.breadcrumbHome')}</a>
+      <span>›</span>
+      <span>${t('status.breadcrumbStatus')}</span>
+      <span>›</span>
+      <span>${s.code}</span>
+    </div>
+
+    <div class="status-hero">
+      <div class="status-hero-cat" style="background:${catColor}"></div>
+      <img
+        class="status-hero-img"
+        src="${src}"
+        alt="HTTP ${s.code} — ${s.name}"
+        onerror="handleImgError(this, ${s.code})"
+      />
+      <div class="status-hero-body">
+        <div class="status-hero-code">${s.code}</div>
+        <div class="status-hero-name">${s.name}</div>
+        <!-- <p class="status-hero-desc">${tStatus(s.code).desc || s.desc}</p> -->
+
+        <div class="status-usage-block">
+          <strong>${t('status.imageUrl')}</strong><br/>
+          <span style="font-size:13px;word-break:break-all">${fullUrl}</span>
+        </div>
+
+        <div id="img-missing-banner"></div>
+
+        <div class="status-nav">
+          <button class="btn btn-primary" onclick="goHome()">${t('status.allStatuses')}</button>
+          <button class="btn btn-yellow"  onclick="copyUrl('${fullUrl}')">${t('status.copyUrl')}</button>
+          <!-- ${prev ? `<button class="btn btn-secondary" onclick="goStatus(${prev.code})">‹ ${prev.code}</button>` : ''} -->
+          <!-- ${next ? `<button class="btn btn-secondary" onclick="goStatus(${next.code})">${next.code} ›</button>` : ''} -->
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function handleImgError(el, code) {
+  el.style.display = 'none';
+  const banner = document.getElementById('img-missing-banner');
+  if (banner) {
+    banner.innerHTML = `
+      <div class="not-found-banner">
+        ${t('status.imgMissingTitle')}<br/>
+        ${t('status.imgMissingBody').replace('{code}', code)}
+      </div>
+    `;
+  }
+}
+
+/* ── COPY ───────────────────────────────────────────────── */
+function copyUrl(url) {
+  navigator.clipboard.writeText(url).catch(() => {});
+  showToast(t('toast.urlCopied'));
+}
+
+function copyApiUrl() {
+  const url = `${location.origin}/images/[codigo].jpg`;
+  navigator.clipboard.writeText(url).catch(() => {});
+  showToast(t('toast.urlPatternCopied'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ── INIT ───────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  // Aplicar idioma salvo
+  applyI18n();
+
+  // Route
+  routeFromURL();
+
+  // Hide loader
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.remove(), 500);
+  }, 700);
+});
+</script>
+</body>
+</html>

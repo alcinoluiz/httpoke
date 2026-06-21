@@ -10,31 +10,10 @@ The project is a Pokémon-themed spiritual successor to the legendary [http.cat]
 
 This version does not need any complex server-side code. The API behavior is provided by a Vercel server config (`vercel.json`) to handle clean URLs dynamically without extensions, or can be hosted statically on GitHub Pages.
 
-The project uses an automated Python engine to compose, resize, and draw the official pixel-perfect frames.
-
-## Development
-
-Run the image automation engine to process raw images from the input directory:
-
-    python3 frame_composer.py
-
-Customize canvas layout, padding, or compression quality:
-
-    python3 frame_composer.py --width 900 --height 900 --quality 92
-
-## Adding a new image
-
-Currently not all HTTP status codes are covered. You are welcome to create an issue or PR to cover them.
-
-To add a new status:
-
-1. Drop the original image into the `images/` folder (name it exactly as the status code, e.g., `418.png`).
-2. Update the `STATUS_NAMES` dictionary inside `frame_composer.py` and the JavaScript mapping file with the correct official status name.
-3. Run `python3 frame_composer.py` to compile the new asset into `images_framed/`.
 
 ## Credits
 
-Thanks to [http.cat](https://http.cat) and [@rogeriopvl](https://github.com/rogeriopvl) for the original idea and layout inspiration.
+Thanks to [http.cat](https://http.cat) for the original idea and layout inspiration.
 
 Thanks to Nintendo, Game Freak, Creatures Inc., and The Pokémon Company for creating the Pokémon franchise.
 

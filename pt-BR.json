@@ -1,0 +1,220 @@
+{
+  "meta.description": "HTTPokémon — HTTP status codes ilustrados com cenas do anime e games de Pokémon.",
+  "loader.loading": "Carregando...",
+  "toast.urlCopied": "URL copiada!",
+  "toast.urlPatternCopied": "Padrão de URL copiado!",
+  "header.logoSub": "status codes · anime & games",
+  "header.copyApi": "📋 Copiar API",
+  "hero.sub": "HTTP Status Codes ilustrados com cenas do anime e games de Pokémon.",
+  "search.placeholder": "Buscar código ou nome... ex: 404",
+  "filter.all": "Todos",
+  "filter.1xx": "1xx Info",
+  "filter.2xx": "2xx Sucesso",
+  "filter.3xx": "3xx Redirect",
+  "filter.4xx": "4xx Client",
+  "filter.5xx": "5xx Server",
+  "card.imgNotFound": "Imagem\nnão encontrada",
+  "status.breadcrumbHome": "HTTPokémon",
+  "status.breadcrumbStatus": "status",
+  "status.unknown": "Status desconhecido",
+  "status.unknownDesc": "Este código não consta na Pokédex HTTP.",
+  "status.backHome": "⬅ Voltar ao início",
+  "status.allStatuses": "⬅ Todos os status",
+  "status.copyUrl": "📋 Copiar URL",
+  "status.imageUrl": "URL da imagem:",
+  "status.imgMissingTitle": "⚠️ Imagem não encontrada!",
+  "status.imgMissingBody": "Adicione o arquivo <code>images/{code}.jpg</code> na raiz do projeto para que apareça aqui.",
+  "footer.developedBy": "Desenvolvido por <a href=\"https://github.com/alcinoluiz\" target=\"_blank\" rel=\"noopener noreferrer\">alce</a>",
+  "footer.inspiredBy": "Inspirado no formato clássico do <a href=\"https://http.cat\" target=\"_blank\" rel=\"noopener noreferrer\">HTTP Cats</a>",
+  "footer.disclaimerTitle": "Aviso Legal / Disclaimer:",
+  "footer.disclaimer1": "<strong>Aviso Legal / Disclaimer:</strong> Este é um projeto de fãs, de caráter estritamente pessoal, educacional e não comercial. As imagens, nomes e conceitos relacionados a Pokémon são marcas registradas e propriedades intelectuais da <strong>Nintendo, Creatures Inc., Game Freak</strong> e <strong>The Pokémon Company</strong>.",
+  "footer.disclaimer2": "Nenhuma infração de direitos autorais é pretendida. Todo o conteúdo original deste site é distribuído de forma gratuita e não gera qualquer tipo de receita direta ou indireta.",
+  "statuses": {
+    "100": {
+      "desc": "O Professor Carvalho diz: continue em frente! Parte da requisição foi recebida, pode prosseguir."
+    },
+    "101": {
+      "desc": "Evolução em andamento! O servidor está trocando de protocolo conforme o pedido do cliente."
+    },
+    "102": {
+      "desc": "Pokémon está sendo treinado… O servidor recebeu e está processando a requisição, mas ainda sem resposta."
+    },
+    "103": {
+      "desc": "Pré-carregamento ativado! O servidor envia cabeçalhos antecipados para ajudar o cliente a preparar recursos."
+    },
+    "200": {
+      "desc": "Pokémon capturado! A requisição foi bem-sucedida e a resposta está aqui."
+    },
+    "201": {
+      "desc": "Novo Pokémon registrado na Pokédex! Recurso criado com sucesso."
+    },
+    "202": {
+      "desc": "Missão aceita pelo Clã da Fogueira! A requisição foi aceita mas o processamento ainda não terminou."
+    },
+    "203": {
+      "desc": "Informação de terceiros — como o Codex do Team Rocket. Os dados vêm de uma fonte intermediária."
+    },
+    "204": {
+      "desc": "Pokémon fugiu… sem deixar rastros. Sucesso, mas sem corpo na resposta."
+    },
+    "205": {
+      "desc": "Pikachu deu reset! O cliente deve limpar o formulário ou tela atual."
+    },
+    "206": {
+      "desc": "Pokémon na metade da batalha! Apenas parte do recurso foi entregue (range request)."
+    },
+    "207": {
+      "desc": "Relatório de toda a equipe! Múltiplos status em uma única resposta XML."
+    },
+    "208": {
+      "desc": "Já reportado ao Professor! Este binding já foi incluído numa resposta anterior."
+    },
+    "226": {
+      "desc": "Delta da Pokédex aplicado! O servidor aplicou uma transformação IM na resposta."
+    },
+    "300": {
+      "desc": "Qual inicial você escolhe? O recurso tem múltiplas representações disponíveis."
+    },
+    "301": {
+      "desc": "Gym Leader mudou de cidade — para sempre! O recurso foi movido permanentemente."
+    },
+    "302": {
+      "desc": "Pokémon avistado por aqui (temporariamente)! Redirecionamento temporário."
+    },
+    "303": {
+      "desc": "Olha ali! O resultado está em outro URI, use GET para buscá-lo."
+    },
+    "304": {
+      "desc": "Nada mudou desde a última batalha! Cache ainda válido, sem necessidade de retransmitir."
+    },
+    "307": {
+      "desc": "Rota temporária no mapa Pokémon! Redirecionamento temporário mantendo o método HTTP."
+    },
+    "308": {
+      "desc": "Nova rota oficial no mapa! Redirecionamento permanente mantendo o método HTTP."
+    },
+    "400": {
+      "desc": "Comando inválido! O servidor não conseguiu entender a requisição por sintaxe malformada."
+    },
+    "401": {
+      "desc": "Você precisa de Badge para entrar! Autenticação necessária mas não fornecida."
+    },
+    "402": {
+      "desc": "Precisa de PokéCoins! Reservado para uso futuro, mas comumente usado para paywalls."
+    },
+    "403": {
+      "desc": "Área restrita do Team Rocket! Autenticado mas sem permissão de acesso."
+    },
+    "404": {
+      "desc": "Pokémon não encontrado! O recurso solicitado não existe neste servidor."
+    },
+    "405": {
+      "desc": "Esse ataque não é permitido aqui! O método HTTP usado não é suportado para este recurso."
+    },
+    "406": {
+      "desc": "Pokémon não aceita essa Pokébola! O servidor não pode gerar uma resposta no formato solicitado."
+    },
+    "407": {
+      "desc": "Guarda do posto Pokémon pede identificação! Autenticação de proxy necessária."
+    },
+    "408": {
+      "desc": "Tempo esgotado para escolher o ataque! O cliente demorou demais para enviar a requisição."
+    },
+    "409": {
+      "desc": "Dois Pokémon, um Treinador — conflito! O estado atual do recurso conflita com a requisição."
+    },
+    "410": {
+      "desc": "Pokémon foi lançado de volta à natureza! O recurso sumiu permanentemente."
+    },
+    "411": {
+      "desc": "Qual o tamanho do seu pedido? O Content-Length é obrigatório para esta requisição."
+    },
+    "412": {
+      "desc": "Pré-condição da batalha não atendida! Uma condição do cabeçalho foi avaliada como falsa."
+    },
+    "413": {
+      "desc": "Snorlax é pesado demais! O payload da requisição excede o limite do servidor."
+    },
+    "414": {
+      "desc": "Caminho até o Ginásio longo demais! O URI fornecido é maior do que o servidor aceita."
+    },
+    "415": {
+      "desc": "Servidor não aceita esse formato de Pokébola! O tipo de mídia da requisição não é suportado."
+    },
+    "416": {
+      "desc": "Faixa de XP inválida! O range de bytes solicitado está fora dos limites do arquivo."
+    },
+    "417": {
+      "desc": "Expectativa de batalha frustrada! O servidor não conseguiu satisfazer o cabeçalho Expect."
+    },
+    "418": {
+      "desc": "Sou um Magikarp, não um Gyarados! RFC 2324 — o servidor recusa fazer café por ser um bule."
+    },
+    "421": {
+      "desc": "Pokémon enviado para o Ginásio errado! A requisição foi direcionada a um servidor inapropriado."
+    },
+    "422": {
+      "desc": "Pokémon mal-formado na Pokébola! O servidor entendeu o tipo mas não consegue processar as instruções."
+    },
+    "423": {
+      "desc": "Pokémon usando Defesa Total! O recurso está bloqueado."
+    },
+    "424": {
+      "desc": "A corrente de batalha quebrou! A requisição falhou porque uma outra falhou antes."
+    },
+    "425": {
+      "desc": "Cedo demais para evoluir! O servidor não quer arriscar processar uma requisição que pode ser repetida."
+    },
+    "426": {
+      "desc": "Precisa evoluir! O cliente precisa mudar para um protocolo diferente."
+    },
+    "428": {
+      "desc": "Condição de batalha obrigatória! O servidor exige que a requisição seja condicional."
+    },
+    "429": {
+      "desc": "Muitas Pokébolas de uma vez! O cliente enviou requisições demais em pouco tempo."
+    },
+    "431": {
+      "desc": "Mochila do Ash transbordando! Os cabeçalhos da requisição são muito grandes."
+    },
+    "444": {
+      "desc": "Pokémon sumiu sem responder! O servidor fechou a conexão sem enviar nenhuma resposta."
+    },
+    "451": {
+      "desc": "Proibido pela Liga Pokémon! O recurso está bloqueado por razões legais."
+    },
+    "499": {
+      "desc": "O Treinador abandonou a batalha! O cliente fechou a conexão antes do servidor responder."
+    },
+    "500": {
+      "desc": "O Servidor ficou confuso como um Psyduck com dor de cabeça! Erro interno inesperado no servidor."
+    },
+    "501": {
+      "desc": "Movimento ainda não aprendido! O servidor não suporta a funcionalidade necessária."
+    },
+    "502": {
+      "desc": "Gateway do Mt. Moon bloqueado! O servidor recebeu uma resposta inválida de um servidor upstream."
+    },
+    "503": {
+      "desc": "Centro Pokémon fechado para manutenção! O servidor está temporariamente indisponível."
+    },
+    "504": {
+      "desc": "Tempo esgotado no corredor do Rocket! O servidor upstream demorou demais para responder."
+    },
+    "505": {
+      "desc": "Versão da Pokédex incompatível! O servidor não suporta a versão HTTP usada na requisição."
+    },
+    "507": {
+      "desc": "PC do Bill está lotado! Não há espaço suficiente para completar a operação."
+    },
+    "508": {
+      "desc": "Pokémon girando em círculos! O servidor detectou um loop infinito ao processar a requisição."
+    },
+    "511": {
+      "desc": "Precisa de autenticação na rede do Ginásio! Requer autenticação para acessar a rede."
+    },
+    "599": {
+      "desc": "Sinal de rede tão fraco quanto Magikarp! Tempo esgotado ao tentar conectar à rede."
+    }
+  }
+}
