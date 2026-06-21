@@ -39,11 +39,6 @@ Thanks to Nintendo, Game Freak, Creatures Inc., and The Pokémon Company for cre
 
 [![Star History Chart](https://api.star-history.com/svg?repos=SEU_USUARIO/NOME_DO_REPOSITORIO&type=Date)](https://star-history.com/#SEU_USUARIO/NOME_DO_REPOSITORIO&Date)
 
-## Sponsor / Donate
-
-If you like this project, consider supporting its maintenance:
-
-<a href="https://www.buymeacoffee.com/SEU_USERNAME" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## License & Disclaimer
 
